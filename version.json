@@ -1,0 +1,30 @@
+{
+  "version": "1.01",
+  "windows_version": "1.1.0.0",
+  "build": 101,
+  "product_name": "CCTV Log Analyzer",
+  "description": "Multi-vendor CCTV recorder (DVR/NVR) forensic log extraction and analysis workbench",
+  "release_channel": "stable",
+  "released": "2026-10-18",
+  "changes": [
+    "Initial public release of CCTV Log Analyzer, the successor of HikvisionLogAnalyzer.",
+    "Reads raw/DD images (including split sets), EnCase E01 images and read-only physical drives.",
+    "Identifies Hikvision, Dahua and TVT recorders from on-disk structures; iCatch disks are identified, but no usable logs were found on them.",
+    "Hikvision RATS log carving with SDK event mapping and payload decoding.",
+    "Dahua XFS database extraction with a normalized UTC timeline and plain-language field explanations.",
+    "TVT mlogtype record parsing with original types, SDK type interpretation and parsed payload fields.",
+    "Recovered record bytes and absolute image offsets in the record details window.",
+    "Case folders with a unique workspace per run, manifest and UTC audit log.",
+    "Byte-accurate progress and cooperative cancellation of long extractions.",
+    "Search, per-column, category, source-database and mlogtype filters with SQL pagination.",
+    "Date filter initialised to the earliest and latest valid log times of the evidence.",
+    "Short summaries in result rows; full details, text and bytes in the record details window.",
+    "Hikvision Security Audit, Camera / Motion and Log Statistics views.",
+    "Read-only entropy survey for unrecognized images.",
+    "CSV export and multi-page HTML reports with record, field and log-type selection.",
+    "Physical Drive Administrator check with Restart as Administrator and evidence-disk safety checks.",
+    "System, Dark and Light themes with configurable fonts.",
+    "Windows installer for the current user or for all users.",
+    "Licensed under GPL-3.0, with third-party notices for all bundled components."
+  ]
+}
