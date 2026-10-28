@@ -81,6 +81,8 @@ This selection applies before writing files, even if the grouping column is omit
 **Config Backup** in the evidence toolbar opens a configuration file exported
 from a Hikvision recorder (Configuration > Export). The file is only read.
 
+![Hashcat mode 26401 line and instructions for a demo backup](screenshots/12-config-backup-hashcat.png)
+
 1. The backup is recognised before any code is entered: its encrypted header
    repeats one AES block thousands of times, which other files do not.
 2. If you have the export code, it is verified against the header, you choose
@@ -119,7 +121,8 @@ All screenshots use synthetic demo data. See [screenshot notes](screenshots/SCRE
 | ![Report record selection](screenshots/04-report-config-selection.png)<br>HTML report: record selection with exact count | ![Report column selection](screenshots/05-report-column-selection.png)<br>HTML report: column selection and summary preset |
 | ![Hikvision log explanation](screenshots/06-hikvision-log-explanation.png)<br>Hikvision record, SDK identifiers and interpretation | ![Dahua source database filter](screenshots/07-dahua-source-database-filter.png)<br>Dahua records filtered by source database |
 | ![Settings](screenshots/08-settings-appearance-reports.png)<br>Appearance, fonts, history and report defaults | ![Light theme](screenshots/09-tvt-light-theme.png)<br>Light theme |
-| ![Entropy survey](screenshots/10-full-image-entropy-survey.png)<br>Full-image entropy survey of an unrecognized image | |
+| ![Entropy survey](screenshots/10-full-image-entropy-survey.png)<br>Full-image entropy survey of an unrecognized image | ![Configuration backup recognised](screenshots/11-config-backup-recognised.png)<br>Config Backup: backup recognised before the export code is entered |
+| ![Hashcat instructions](screenshots/12-config-backup-hashcat.png)<br>Config Backup: hashcat mode 26401 line and instructions without the code | ![Configuration decoded](screenshots/13-config-backup-decoded.png)<br>Config Backup: every section decoded and checksum-verified with the code |
 
 ## Supported Evidence
 
