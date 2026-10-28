@@ -1,8 +1,8 @@
 #ifndef MyAppVersion
-  #define MyAppVersion "1.01"
+  #define MyAppVersion "1.02"
 #endif
 #ifndef MyWindowsVersion
-  #define MyWindowsVersion "1.1.0.0"
+  #define MyWindowsVersion "1.2.0.0"
 #endif
 
 #define MyAppName "CCTV Log Analyzer"

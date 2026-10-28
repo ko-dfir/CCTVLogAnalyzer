@@ -5,7 +5,8 @@ NOTICES = (ROOT / 'THIRD_PARTY_NOTICES.md').read_text(encoding='utf-8')
 
 # Every runtime dependency the installer bundles must be named in the notices.
 REQUIRED_COMPONENTS = ('Python', 'Qt', 'PySide6', 'libewf-python', 'dissect.xfs',
-                       'dissect.cstruct', 'dissect.util', 'Nuitka', 'OpenSSL')
+                       'dissect.cstruct', 'dissect.util', 'cryptography', 'cffi', 'pycparser',
+                       'Nuitka', 'OpenSSL')
 
 
 def test_notices_name_every_bundled_component():

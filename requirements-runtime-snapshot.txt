@@ -8,3 +8,6 @@ dissect.xfs==3.13
 dissect.cstruct==4.7
 dissect.util==3.24
 libewf-python==20240506
+cryptography==50.0.2
+cffi==2.1.1
+pycparser==3.12

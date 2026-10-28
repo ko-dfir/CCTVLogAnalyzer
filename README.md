@@ -1,4 +1,4 @@
-# CCTV Log Analyzer 1.01
+# CCTV Log Analyzer 1.02
 
 Select a **Case Folder** in the left sidebar before starting analysis. Each
 extraction creates a new workspace, even for a repeated run of the same image:
@@ -76,6 +76,37 @@ the checked types and check e.g. config only. Each type shows its count in the
 chosen scope, and a live total shows the exact number of records to export.
 This selection applies before writing files, even if the grouping column is omitted.
 
+## Hikvision configuration backups
+
+**Config Backup** in the evidence toolbar opens a configuration file exported
+from a Hikvision recorder (Configuration > Export). The file is only read.
+
+1. The backup is recognised before any code is entered: its encrypted header
+   repeats one AES block thousands of times, which other files do not.
+2. If you have the export code, it is verified against the header, you choose
+   an output folder, and every section is decrypted, checked against its stored
+   checksum and decompressed into `<backup>-config/decoded/*.cfg.txt`. A
+   `manifest.json` records the source SHA-256, each section's offsets, sizes,
+   checksums and SHA-256 hashes. Nothing is written unless every section
+   decodes; the export code itself is never stored.
+3. If you do not have the code, the tool shows a hash line for hashcat mode
+   26401 (AES-128-ECB NOKDF) with ready-to-run commands, and can copy it or
+   save it as a hash file. **I have the code now…** continues with step 2 once
+   the code is recovered.
+
+The format is AES-128-ECB with the export code (zero-padded, at most 16
+characters) as the key and no key derivation, followed by raw LZMA1 streams.
+Short or numeric codes are recovered quickly; long random codes are not
+practical to search. Decoded files hold the device settings in clear text,
+including stored credentials, so handle them as evidence. They describe the
+configuration only and do not contain the recorder's logs.
+
+**Firmware compatibility:** tested with backups from Hikvision firmware 4.x and
+later. It is not known whether backups from earlier firmware use the same
+format. For older firmware, see
+[WormChickenWizard/hikvision-decrypter](https://github.com/WormChickenWizard/hikvision-decrypter)
+and [rafayahmed317/hikvision-decryptor](https://github.com/rafayahmed317/hikvision-decryptor).
+
 ## Screenshots
 
 All screenshots use synthetic demo data. See [screenshot notes](screenshots/SCREENSHOTS.md).
@@ -97,6 +128,7 @@ All screenshots use synthetic demo data. See [screenshot notes](screenshots/SCRE
 - Hikvision HIKFAT / `RATS` records
 - Dahua GPT/XFS SQLite databases
 - TVT variable-length `mlogtype:` records
+- Hikvision configuration backups (decoding with the export code, or a hashcat hash without it)
 
 ## Development
 

@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.02 — 2026-10-28
+
+### Hikvision configuration backups
+
+- **Config Backup** opens a configuration file exported from a Hikvision
+  recorder and recognises it before the export code is known.
+- With the export code: the code is verified, then every section is decrypted,
+  checked against its stored checksum and decompressed into a new folder with a
+  `manifest.json` of offsets, sizes and SHA-256 hashes. Nothing is written
+  unless every section decodes, and the export code is never stored.
+- Without the export code: a hash line for hashcat mode 26401 (AES-128-ECB
+  NOKDF) with ready-to-run commands, plus copy and save.
+- Tested with backups from firmware 4.x and later. It is not known whether
+  backups from earlier firmware use the same format; for those, see
+  [WormChickenWizard/hikvision-decrypter](https://github.com/WormChickenWizard/hikvision-decrypter)
+  and [rafayahmed317/hikvision-decryptor](https://github.com/rafayahmed317/hikvision-decryptor).
+
+### Dependencies
+
+- Adds `cryptography` 50.0.2 (with `cffi` and `pycparser`), listed in the
+  third-party notices with their license texts.
+
 ## 1.01 — 2026-10-18
 
 Initial public release of CCTV Log Analyzer, the successor of

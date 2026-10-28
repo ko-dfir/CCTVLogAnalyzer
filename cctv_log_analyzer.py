@@ -47,6 +47,7 @@ from scripts.physical_drive import (
 from scripts.image_io import open_image
 from scripts.table_rows import CELL_ALIGNMENT, cell_summary, cell_tooltip, fit_rows
 from scripts.entropy_dialog import EntropyDialog
+from scripts.config_backup_dialog import run_config_backup
 from scripts.tvt_log_fields import ensure_tvt_mlogtype
 from scripts.report_options import ReportOptionsDialog
 from scripts.cancellation import check_cancelled, ExtractionCancelled
@@ -535,8 +536,7 @@ class CCTVLogAnalyzerWindow(QMainWindow):
         main_layout.setSpacing(6)
         root_layout.addWidget(content, 1)
 
-        # One compact evidence toolbar replaces the former large title card and
-        # separate target group, preserving vertical space for result rows.
+        # One compact evidence toolbar keeps vertical space for result rows.
         header = QFrame()
         header.setObjectName("Header")
         header_layout = QHBoxLayout(header)
@@ -573,6 +573,10 @@ class CCTVLogAnalyzerWindow(QMainWindow):
         btn_drive = QPushButton("Physical Drive")
         btn_drive.setToolTip("Analyze a Windows physical disk directly (read-only; may require Administrator)")
         btn_drive.clicked.connect(self.action_load_drive)
+        btn_config = QPushButton("Config Backup")
+        btn_config.setToolTip("Validate and decode a Hikvision configuration backup, or get a hashcat "
+                              "hash when the export code is unknown (read-only)")
+        btn_config.clicked.connect(self.action_config_backup)
         
         self.btn_carve = QPushButton("Carve Data")
         self.btn_carve.setEnabled(False)
@@ -593,6 +597,7 @@ class CCTVLogAnalyzerWindow(QMainWindow):
         header_layout.addSpacing(6)
         header_layout.addWidget(btn_load)
         header_layout.addWidget(btn_drive)
+        header_layout.addWidget(btn_config)
         header_layout.addWidget(self.img_lbl, 1)
         header_layout.addWidget(self.brand_lbl)
         header_layout.addWidget(self.log_availability_lbl)
@@ -929,11 +934,16 @@ class CCTVLogAnalyzerWindow(QMainWindow):
         heading.setObjectName("Title")
         layout.addWidget(heading)
         layout.addWidget(QLabel(metadata.get("description", "")))
-        changes = metadata.get("changes") or []
+        notes = []
+        for release in [metadata] + list(metadata.get("history") or []):
+            changes = release.get("changes") or []
+            if changes:
+                notes.append(f"Version {release.get('version', '')} — {release.get('released', '')}")
+                notes.extend(f"• {change}" for change in changes)
+                notes.append("")
         history = QPlainTextEdit()
         history.setReadOnly(True)
-        history.setPlainText("\n".join(f"• {change}" for change in changes)
-                             or "No release notes are available.")
+        history.setPlainText("\n".join(notes).strip() or "No release notes are available.")
         layout.addWidget(history, 1)
         buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
         buttons.rejected.connect(dialog.reject)
@@ -1299,6 +1309,12 @@ class CCTVLogAnalyzerWindow(QMainWindow):
                 self.log_availability_lbl.setToolTip("")
                 self.log_availability_lbl.setObjectName("StatusMuted")
                 self.btn_carve.setEnabled(False)
+
+    def action_config_backup(self):
+        start_dir = str(self.settings.get("last_open_dir") or "")
+        manifest = run_config_backup(self, self.append_log, start_dir)
+        if manifest:
+            self.settings.set("last_open_dir", os.path.dirname(manifest["source"]))
 
     def action_entropy_test(self):
         if self.image_path:

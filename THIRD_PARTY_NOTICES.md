@@ -14,6 +14,10 @@ each distributed under its own license. Full license texts are in the
 | dissect.xfs | 3.13 | AGPL-3.0-or-later | Fox-IT, part of NCC Group Plc — https://github.com/fox-it/dissect.xfs | `licenses/AGPL-3.0.txt`, `licenses/dissect-COPYRIGHT.txt` |
 | dissect.cstruct | 4.7 | Apache-2.0 | Fox-IT, part of NCC Group Plc — https://github.com/fox-it/dissect.cstruct | `licenses/Apache-2.0.txt`, `licenses/dissect-COPYRIGHT.txt` |
 | dissect.util | 3.24 | Apache-2.0 | Fox-IT, part of NCC Group Plc — https://github.com/fox-it/dissect.util | `licenses/Apache-2.0.txt`, `licenses/dissect-COPYRIGHT.txt` |
+| cryptography | 50.0.2 | Apache-2.0 OR BSD-3-Clause (used under BSD-3-Clause) | The Python Cryptographic Authority and individual contributors — https://github.com/pyca/cryptography | `licenses/cryptography-LICENSE.txt`, `licenses/Apache-2.0.txt` |
+| OpenSSL (statically linked into cryptography) | 4.0 | Apache-2.0 | The OpenSSL Project Authors — https://github.com/openssl/openssl | `licenses/Apache-2.0.txt` |
+| cffi | 2.1.1 | MIT | Armin Rigo, Maciej Fijalkowski and contributors — https://github.com/python-cffi/cffi | `licenses/cffi-LICENSE.txt` |
+| pycparser | 3.12 | BSD-3-Clause | Eli Bendersky — https://github.com/eliben/pycparser | `licenses/pycparser-LICENSE.txt` |
 | Nuitka runtime library | 4.2.2 | AGPL-3.0 with the Nuitka Runtime Library Exception | Kay Hayen — https://github.com/Nuitka/Nuitka | `licenses/Nuitka-Runtime-Library-Exception.txt` |
 
 ## Components bundled with the Python runtime
