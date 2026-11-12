@@ -574,8 +574,8 @@ class CCTVLogAnalyzerWindow(QMainWindow):
         btn_drive.setToolTip("Analyze a Windows physical disk directly (read-only; may require Administrator)")
         btn_drive.clicked.connect(self.action_load_drive)
         btn_config = QPushButton("Config Backup")
-        btn_config.setToolTip("Validate and decode a Hikvision configuration backup, or get a hashcat "
-                              "hash when the export code is unknown (read-only)")
+        btn_config.setToolTip("Decode a Hikvision or Dahua configuration backup, or get a hashcat "
+                              "hash when a Hikvision export code is unknown (read-only)")
         btn_config.clicked.connect(self.action_config_backup)
         
         self.btn_carve = QPushButton("Carve Data")

@@ -1,4 +1,4 @@
-# CCTV Log Analyzer 1.02
+# CCTV Log Analyzer 1.03
 
 Select a **Case Folder** in the left sidebar before starting analysis. Each
 extraction creates a new workspace, even for a repeated run of the same image:
@@ -76,6 +76,21 @@ the checked types and check e.g. config only. Each type shows its count in the
 chosen scope, and a live total shows the exact number of records to export.
 This selection applies before writing files, even if the grouping column is omitted.
 
+## Dahua configuration backups
+
+**Config Backup** also opens Dahua XVR/NVR configuration exports
+(`configFileExport.backup`, starting with `MWPZWJGS`). These are encrypted with
+a fixed key for each device family, so no export code is needed. The payload is
+checked against its stored MD5, which also identifies the family (HCVR, XVR or NVR),
+then the `.tar.gz` inside is extracted into `<backup>-config/` with a
+`.pretty.json` copy of each JSON file and a `manifest.json` of SHA-256 hashes.
+Nothing is written unless the payload verifies and unpacks safely. Tested with
+backups from an HCVR5104C-S3 (V3.218 firmware) and an 8-channel XVR.
+
+The decoded configuration holds settings such as channel names, IP-camera
+connections and their stored passwords, ports, DNS, NTP, DDNS, email, FTP and
+SNMP. The recorder's own user accounts are not part of this export.
+
 ## Hikvision configuration backups
 
 **Config Backup** in the evidence toolbar opens a configuration file exported
@@ -132,6 +147,7 @@ All screenshots use synthetic demo data. See [screenshot notes](screenshots/SCRE
 - Dahua GPT/XFS SQLite databases
 - TVT variable-length `mlogtype:` records
 - Hikvision configuration backups (decoding with the export code, or a hashcat hash without it)
+- Dahua XVR/NVR configuration backups (`MWPZWJGS`)
 
 ## Development
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.03 — 2026-11-12
+
+- **Config Backup** decodes Dahua HCVR/XVR/NVR configuration backups
+  (`MWPZWJGS`): MD5-verified decryption with the device-family key, which also
+  identifies the family (HCVR, XVR or NVR), extraction of the configuration
+  archive, pretty-printed JSON copies and a SHA-256 manifest. Tested with an
+  HCVR5104C-S3 (V3.218) and an 8-channel XVR.
+
 ## 1.02 — 2026-10-28
 
 ### Hikvision configuration backups

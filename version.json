@@ -1,18 +1,28 @@
 {
-  "version": "1.02",
-  "windows_version": "1.2.0.0",
-  "build": 102,
+  "version": "1.03",
+  "windows_version": "1.3.0.0",
+  "build": 103,
   "product_name": "CCTV Log Analyzer",
   "description": "Multi-vendor CCTV recorder (DVR/NVR) forensic log extraction and analysis workbench",
   "release_channel": "stable",
-  "released": "2026-10-28",
+  "released": "2026-11-12",
   "changes": [
-    "Config Backup: opens a Hikvision configuration backup and recognises it before the export code is known.",
-    "With the export code: verified decoding of every section into a new folder with a SHA-256 manifest; nothing is written unless every section decodes.",
-    "Without the export code: a hashcat mode 26401 hash line with ready-to-run commands, copy and save.",
-    "Tested with Hikvision firmware 4.x and later; for older firmware see WormChickenWizard/hikvision-decrypter and rafayahmed317/hikvision-decryptor on GitHub."
+    "Config Backup decodes Dahua XVR/NVR configuration backups (MWPZWJGS) with no export code needed.",
+    "The payload is MD5-verified, which also identifies the device family (HCVR, XVR or NVR); nothing is written unless it verifies and unpacks safely.",
+    "Extracted configuration files with pretty-printed JSON copies and a SHA-256 manifest.",
+    "Tested with an HCVR5104C-S3 (V3.218 firmware) and an 8-channel XVR."
   ],
   "history": [
+    {
+      "version": "1.02",
+      "released": "2026-10-28",
+      "changes": [
+        "Config Backup: opens a Hikvision configuration backup and recognises it before the export code is known.",
+        "With the export code: verified decoding of every section into a new folder with a SHA-256 manifest; nothing is written unless every section decodes.",
+        "Without the export code: a hashcat mode 26401 hash line with ready-to-run commands, copy and save.",
+        "Tested with Hikvision firmware 4.x and later; for older firmware see WormChickenWizard/hikvision-decrypter and rafayahmed317/hikvision-decryptor on GitHub."
+      ]
+    },
     {
       "version": "1.01",
       "released": "2026-10-18",

@@ -24,9 +24,9 @@ $env:CCTV_BUILD_DIAGNOSTIC = '1'            # optional: visible console
 Setup. The executable is written to `dist/cctv_log_analyzer.dist/CCTVLogAnalyzer.exe`
 and the installer to `installer-output/`.
 
-The display version is `1.02`; the four-part `windows_version` (`1.2.0.0`) in
+The display version is `1.03`; the four-part `windows_version` (`1.3.0.0`) in
 `version.json` is passed to Nuitka and Inno Setup, because Windows numeric
-version fields cannot carry the leading zero in `02`.
+version fields cannot carry the leading zero in `03`.
 
 ## Qt signal connections
 

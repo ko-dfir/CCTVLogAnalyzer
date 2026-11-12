@@ -1,10 +1,13 @@
-"""Open, validate and decode a Hikvision configuration backup.
+"""Open, validate and decode a Hikvision or Dahua configuration backup.
 
-Flow: choose the backup, recognise it without the code, ask whether the
-export code is known. With the code: verify it, choose an output folder and
-decode. Without it: show the hashcat mode 26401 line and instructions.
+Dahua XVR/NVR backups use a fixed device-family key: confirm, choose an output
+folder and decode. Hikvision backups: recognise the backup without the code
+and ask whether the export code is known. With the code: verify it, choose an
+output folder and decode. Without it: show the hashcat mode 26401 line and
+instructions.
 """
 
+import hashlib
 import os
 
 from PySide6.QtCore import Qt, QUrl
@@ -14,6 +17,7 @@ from PySide6.QtWidgets import (
     QLineEdit, QMessageBox, QPlainTextEdit, QPushButton, QVBoxLayout,
 )
 
+from scripts import dahua_config_backup
 from scripts.hikvision_config_backup import (
     FIRMWARE_NOTE, MAX_CODE_LENGTH, BackupError, WrongCodeError, decode_backup, hashcat_instructions,
     hashcat_line, inspect_backup, verify_code,
@@ -138,13 +142,63 @@ def decode_with_code(parent, backup_path, code, log=None, start_dir=""):
     return manifest
 
 
+def decode_dahua(parent, backup_path, log=None, start_dir=""):
+    """Confirm, choose an output folder and decode a Dahua backup; returns the manifest or None."""
+    with open(backup_path, "rb") as handle:
+        data = handle.read()
+    sha256 = hashlib.sha256(data).hexdigest()
+    if log:
+        log(f"[Config backup] {backup_path}: {len(data):,} bytes, SHA-256 {sha256}; Dahua XVR/NVR backup")
+    answer = QMessageBox.question(
+        parent, "Configuration backup recognised",
+        f"{os.path.basename(backup_path)}\n{len(data):,} bytes\nSHA-256 {sha256}\n\n"
+        "This is a Dahua HCVR/XVR/NVR configuration backup. It is encrypted with a fixed key for the "
+        "device family, so no export code is needed.\n\nDecode it?",
+        QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.Cancel, QMessageBox.StandardButton.Yes)
+    if answer != QMessageBox.StandardButton.Yes:
+        return None
+    folder = QFileDialog.getExistingDirectory(parent, "Choose where to save the decoded configuration",
+                                              start_dir or os.path.dirname(backup_path))
+    if not folder:
+        return None
+    QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+    try:
+        manifest = dahua_config_backup.decode_backup(backup_path, folder)
+    except (dahua_config_backup.DahuaBackupError, OSError) as exc:
+        QApplication.restoreOverrideCursor()
+        QMessageBox.warning(parent, "Decoding failed", str(exc))
+        if log:
+            log(f"[Config backup] Decoding failed: {exc}")
+        return None
+    QApplication.restoreOverrideCursor()
+    output = manifest["output_folder"]
+    if log:
+        log(f"[Config backup] Decoded Dahua {manifest['device_family']} backup {backup_path}: "
+            f"{manifest['file_count']} files to {output}")
+    box = QMessageBox(parent)
+    box.setIcon(QMessageBox.Icon.Information)
+    box.setWindowTitle("Configuration decoded")
+    box.setText(f"Dahua {manifest['device_family']} backup verified (MD5); extracted "
+                f"{manifest['file_count']} files and formatted {manifest['pretty_json_count']} JSON files.")
+    box.setInformativeText(f"Saved to:\n{output}\n\nThe decoded files contain the device settings "
+                           "in clear text, including stored credentials. Handle them as evidence.")
+    open_button = box.addButton("Open folder", QMessageBox.ButtonRole.ActionRole)
+    box.addButton(QMessageBox.StandardButton.Close)
+    box.exec()
+    if box.clickedButton() is open_button:
+        QDesktopServices.openUrl(QUrl.fromLocalFile(output))
+    return manifest
+
+
 def run_config_backup(parent, log=None, start_dir=""):
     """Full interactive flow; returns the decode manifest or None."""
-    path, _ = QFileDialog.getOpenFileName(parent, "Select Hikvision configuration backup", start_dir,
+    path, _ = QFileDialog.getOpenFileName(parent, "Select Hikvision or Dahua configuration backup", start_dir,
                                           "All Files (*)")
     if not path:
         return None
     try:
+        if dahua_config_backup.is_dahua_backup(path):
+            return decode_dahua(parent, path, log, start_dir)
         info = inspect_backup(path)
     except OSError as exc:
         QMessageBox.warning(parent, "Cannot read file", str(exc))
@@ -153,7 +207,8 @@ def run_config_backup(parent, log=None, start_dir=""):
         log(f"[Config backup] {path}: {info.size:,} bytes, SHA-256 {info.sha256}; {info.reason}")
     if not info.valid:
         QMessageBox.warning(parent, "Not a configuration backup",
-                            f"{os.path.basename(path)} is not a Hikvision configuration backup.\n\n{info.reason}"
+                            f"{os.path.basename(path)} is not a Hikvision or Dahua configuration backup."
+                            f"\n\n{info.reason}"
                             f"\n\n{FIRMWARE_NOTE}")
         return None
 

@@ -1,4 +1,4 @@
-# CCTV Log Analyzer 1.02 — screenshot set
+# CCTV Log Analyzer 1.03 — screenshot set
 
 Thirteen screenshots of the running application: 1-10 captured on 2026-10-17
 and 11-13 on 2026-10-28.
